@@ -6,29 +6,18 @@ import { TodoList } from './components/TodoList';
 import { TodoFilter } from './components/TodoFilter';
 import { TodoModal } from './components/TodoModal';
 import { Loader } from './components/Loader';
+import { getTodos } from './api';
+import { useEffect, useState } from 'react';
 import { Todo } from './types/Todo';
 
-const API_TODOS = 'http://localhost:5173/api/todos.json';
-const API_USER = 'http://localhost:5173/api/users.json';
-
-fetch(API_USER).then(response => response.json());
-
 export const App: React.FC = () => {
-  function getAll(): Promise<Todo[]> {
-    return fetch(API_TODOS).then(response => response.json());
-  }
+  const [todos, setTodos] = useState<Todo[]>([]);
 
-  function getAllActive() {
-    return getAll().then(todos =>
-      todos.filter(todo => todo.completed === false),
-    );
-  }
-
-  function getAllCompleted() {
-    return getAll().then(todos =>
-      todos.filter(todo => todo.completed === true),
-    );
-  }
+  useEffect(() => {
+    getTodos().then(response => {
+      setTodos(response);
+    });
+  }, []);
 
   return (
     <>
@@ -38,21 +27,16 @@ export const App: React.FC = () => {
             <h1 className="title">Todos:</h1>
 
             <div className="block">
-              <TodoFilter
-                onClickAll={() => getAll}
-                onClickHandlerActive={() => getAllActive}
-                onClickHandlerCompleted={() => getAllCompleted}
-              />
+              <TodoFilter />
             </div>
 
             <div className="block">
               <Loader />
-              <TodoList />
+              <TodoList todos={todos} />
             </div>
           </div>
         </div>
       </div>
-
       <TodoModal />
     </>
   );
