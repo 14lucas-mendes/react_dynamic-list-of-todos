@@ -1,11 +1,34 @@
 import React from 'react';
 
-export const TodoFilter = () => {
+type Props = {
+  filterByActive: () => void;
+  filterByCompleted: () => void;
+  resetFilters: () => void;
+};
+
+export const TodoFilter: React.FC<Props> = ({
+  filterByActive,
+  filterByCompleted,
+  resetFilters,
+}) => {
+  const handlerFilterChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    switch (e.target.value) {
+      case 'Active':
+        filterByActive();
+        break;
+      case 'Completed':
+        filterByCompleted();
+        break;
+      default:
+        resetFilters();
+    }
+  };
+
   return (
     <form className="field has-addons">
       <p className="control">
         <span className="select">
-          <select data-cy="statusSelect">
+          <select data-cy="statusSelect" onClick={() => handlerFilterChange}>
             <option value="all">All</option>
             <option value="active">Active</option>
             <option value="completed">Completed</option>

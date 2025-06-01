@@ -12,12 +12,26 @@ import { Todo } from './types/Todo';
 
 export const App: React.FC = () => {
   const [todos, setTodos] = useState<Todo[]>([]);
+  const [originalTodos, setOriginalTodos] = useState<Todo[]>([]); // guarda a lista original
 
   useEffect(() => {
     getTodos().then(response => {
       setTodos(response);
+      setOriginalTodos(response);
     });
   }, []);
+
+  const filterByActive = () => {
+    setTodos(originalTodos.filter(todo => !todo.completed));
+  };
+
+  const filterByCompleted = () => {
+    setTodos(originalTodos.filter(todo => todo.completed));
+  };
+
+  const resetFilters = () => {
+    setTodos(originalTodos);
+  };
 
   return (
     <>
@@ -27,7 +41,11 @@ export const App: React.FC = () => {
             <h1 className="title">Todos:</h1>
 
             <div className="block">
-              <TodoFilter />
+              <TodoFilter
+                filterByActive={() => filterByActive}
+                filterByCompleted={() => filterByCompleted}
+                resetFilters={() => resetFilters}
+              />
             </div>
 
             <div className="block">
@@ -36,8 +54,8 @@ export const App: React.FC = () => {
             </div>
           </div>
         </div>
+        <TodoModal />
       </div>
-      <TodoModal />
     </>
   );
 };
