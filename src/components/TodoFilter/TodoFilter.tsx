@@ -4,19 +4,23 @@ type Props = {
   filterByActive: () => void;
   filterByCompleted: () => void;
   resetFilters: () => void;
+  query: string;
+  setQuery: (event: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
 export const TodoFilter: React.FC<Props> = ({
   filterByActive,
   filterByCompleted,
   resetFilters,
+  query,
+  setQuery,
 }) => {
   const handlerFilterChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     switch (e.target.value) {
-      case 'Active':
+      case 'active':
         filterByActive();
         break;
-      case 'Completed':
+      case 'completed':
         filterByCompleted();
         break;
       default:
@@ -28,7 +32,7 @@ export const TodoFilter: React.FC<Props> = ({
     <form className="field has-addons">
       <p className="control">
         <span className="select">
-          <select data-cy="statusSelect" onClick={() => handlerFilterChange}>
+          <select data-cy="statusSelect" onChange={handlerFilterChange}>
             <option value="all">All</option>
             <option value="active">Active</option>
             <option value="completed">Completed</option>
@@ -42,6 +46,8 @@ export const TodoFilter: React.FC<Props> = ({
           type="text"
           className="input"
           placeholder="Search..."
+          value={query}
+          onChange={setQuery}
         />
         <span className="icon is-left">
           <i className="fas fa-magnifying-glass" />

@@ -13,6 +13,7 @@ import { Todo } from './types/Todo';
 export const App: React.FC = () => {
   const [todos, setTodos] = useState<Todo[]>([]);
   const [originalTodos, setOriginalTodos] = useState<Todo[]>([]); // guarda a lista original
+  const [query, setQuery] = useState('');
 
   useEffect(() => {
     getTodos().then(response => {
@@ -33,6 +34,19 @@ export const App: React.FC = () => {
     setTodos(originalTodos);
   };
 
+  useEffect(() => {
+    const normalizedQuery = query.trim().toLowerCase();
+    const filtered = originalTodos.filter(todo =>
+      todo.title.toLowerCase().includes(normalizedQuery),
+    );
+
+    setTodos(filtered);
+  }, [query, originalTodos]);
+
+  const handleQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setQuery(event.target.value);
+  };
+
   return (
     <>
       <div className="section">
@@ -42,9 +56,11 @@ export const App: React.FC = () => {
 
             <div className="block">
               <TodoFilter
-                filterByActive={() => filterByActive}
-                filterByCompleted={() => filterByCompleted}
-                resetFilters={() => resetFilters}
+                filterByActive={filterByActive}
+                filterByCompleted={filterByCompleted}
+                resetFilters={resetFilters}
+                query={query}
+                setQuery={handleQueryChange}
               />
             </div>
 
