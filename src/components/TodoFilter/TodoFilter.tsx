@@ -6,6 +6,7 @@ type Props = {
   resetFilters: () => void;
   query: string;
   setQuery: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  closeByQuery: () => void;
 };
 
 export const TodoFilter: React.FC<Props> = ({
@@ -14,6 +15,7 @@ export const TodoFilter: React.FC<Props> = ({
   resetFilters,
   query,
   setQuery,
+  closeByQuery,
 }) => {
   const handlerFilterChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     switch (e.target.value) {
@@ -59,6 +61,7 @@ export const TodoFilter: React.FC<Props> = ({
             data-cy="clearSearchButton"
             type="button"
             className="delete"
+            onClick={closeByQuery}
           />
         </span>
       </p>

@@ -47,6 +47,10 @@ export const App: React.FC = () => {
     setQuery(event.target.value);
   };
 
+  const closeByFilter = () => {
+    setQuery('');
+  };
+
   return (
     <>
       <div className="section">
@@ -61,6 +65,7 @@ export const App: React.FC = () => {
                 resetFilters={resetFilters}
                 query={query}
                 setQuery={handleQueryChange}
+                closeByQuery={closeByFilter}
               />
             </div>
 
