@@ -14,13 +14,8 @@ export const App: React.FC = () => {
   const [todos, setTodos] = useState<Todo[]>([]);
   const [originalTodos, setOriginalTodos] = useState<Todo[]>([]); // guarda a lista original
   const [query, setQuery] = useState('');
-
-  useEffect(() => {
-    getTodos().then(response => {
-      setTodos(response);
-      setOriginalTodos(response);
-    });
-  }, []);
+  const [open, setOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const filterByActive = () => {
     setTodos(originalTodos.filter(todo => !todo.completed));
@@ -35,6 +30,18 @@ export const App: React.FC = () => {
   };
 
   useEffect(() => {
+    if (originalTodos.length === 0) {
+      setIsLoading(true);
+
+      getTodos().then(response => {
+        setTimeout(() => {
+          setTodos(response);
+          setOriginalTodos(response);
+          setIsLoading(false);
+        }, 1000);
+      });
+    }
+
     const normalizedQuery = query.trim().toLowerCase();
     const filtered = originalTodos.filter(todo =>
       todo.title.toLowerCase().includes(normalizedQuery),
@@ -70,12 +77,12 @@ export const App: React.FC = () => {
             </div>
 
             <div className="block">
-              <Loader />
+              {!isLoading && <Loader />}
               <TodoList todos={todos} />
             </div>
           </div>
         </div>
-        <TodoModal />
+        <TodoModal open={open} setOpen={setOpen} todos={todos} />
       </div>
     </>
   );
